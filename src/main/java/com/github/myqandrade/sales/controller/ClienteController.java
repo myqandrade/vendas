@@ -15,6 +15,13 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
 
+
+    @GetMapping
+    @ResponseBody
+    public ResponseEntity getAllClientes(){
+        return ResponseEntity.ok(clienteRepository.findAll());
+    }
+
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity getClienteById(@PathVariable Integer id){
@@ -41,13 +48,14 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateCliente(@RequestBody Cliente cliente, @PathVariable Integer id){
-        Optional<Cliente> cliente1 = clienteRepository.findById(id);
-        if(cliente1.isPresent()){
-            cliente.setId(cliente1.get().getId());
-            return ResponseEntity.ok().body(clienteRepository.save(cliente));
-        }
-
-        return ResponseEntity.notFound().build();
+    @ResponseBody
+    public ResponseEntity updateCliente(@RequestBody Cliente clienteAtualizado,
+                                        @PathVariable Integer id){
+        return clienteRepository.findById(id)
+                .map(cliente -> {
+                    clienteAtualizado.setId(cliente.getId());
+                    clienteRepository.save(clienteAtualizado);
+                    return ResponseEntity.noContent().build();
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
