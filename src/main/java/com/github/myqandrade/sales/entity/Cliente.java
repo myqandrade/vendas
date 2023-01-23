@@ -1,5 +1,6 @@
 package com.github.myqandrade.sales.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,5 +18,6 @@ public class Cliente {
     @Column(name = "nome", length = 100)
     private String nome;
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Pedido> pedidos;
 }
