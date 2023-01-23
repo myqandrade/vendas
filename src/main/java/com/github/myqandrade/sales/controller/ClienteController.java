@@ -17,13 +17,26 @@ public class ClienteController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Cliente> getClienteById(@PathVariable Integer id){
+    public ResponseEntity getClienteById(@PathVariable Integer id){
         Optional<Cliente> cliente = clienteRepository.findById(id);
         return cliente.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> saveCliente(@RequestBody Cliente cliente){
-        return ResponseEntity.status(HttpStatus.CREATED).body(clienteRepository.save(cliente));
+    @ResponseBody
+    public ResponseEntity saveCliente(@RequestBody Cliente cliente){
+        Cliente clienteSalvo = clienteRepository.save(cliente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity deleteCliente(@PathVariable Integer id){
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+        if(cliente.isPresent()){
+            clienteRepository.delete(cliente.get());
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
