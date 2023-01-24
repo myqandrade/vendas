@@ -3,10 +3,13 @@ package com.github.myqandrade.sales.controller;
 import com.github.myqandrade.sales.entity.Cliente;
 import com.github.myqandrade.sales.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +23,19 @@ public class ClienteController {
     @ResponseBody
     public ResponseEntity getAllClientes(){
         return ResponseEntity.ok(clienteRepository.findAll());
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity find(Cliente filtro){
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        Example example = Example.of(filtro, matcher);
+        List<Cliente> clientes = clienteRepository.findAll(example);
+
+        return ResponseEntity.ok(clientes);
     }
 
     @GetMapping("/{id}")
