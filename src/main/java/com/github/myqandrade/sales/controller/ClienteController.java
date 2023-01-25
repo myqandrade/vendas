@@ -13,6 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.*;
+
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
@@ -21,13 +23,13 @@ public class ClienteController {
 
 
     @GetMapping
-    @ResponseBody
+    @ResponseStatus(OK)
     public ResponseEntity getAllClientes(){
         return ResponseEntity.ok(clienteRepository.findAll());
     }
 
     @GetMapping("/find")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public List<Cliente> find(Cliente filtro){
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
@@ -39,7 +41,7 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    @ResponseBody
+    @ResponseStatus(OK)
     public Cliente getClienteById(@PathVariable Integer id){
         return clienteRepository.findById(id)
                 .orElseThrow(() ->
@@ -48,13 +50,13 @@ public class ClienteController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public Cliente saveCliente(@RequestBody Cliente cliente){
         return clienteRepository.save(cliente);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void deleteCliente(@PathVariable Integer id){
         Optional<Cliente> cliente = clienteRepository.findById(id);
         if(cliente.isEmpty()){
@@ -64,7 +66,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void updateCliente(@RequestBody Cliente clienteAtualizado,
                                         @PathVariable Integer id){
         clienteRepository.findById(id)
