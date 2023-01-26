@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PeditoDTO {
+public class PedidoDTO {
 
     private Integer cliente;
     private BigDecimal total;
